@@ -11,16 +11,14 @@ Text Domain: seeds_seo
 
 add_action("add_meta_boxes", function() {
 
-  $screens = ["post", "page"];
-
-  foreach($screens as $screen) {
+  foreach(get_post_types('', 'names') as $post_type) {
 
     add_meta_box(
       "seeds_seo",
       esc_html__("SEO Meta Content", "seedscs"),
       "render_seeds_seo",
-      $screen,
-      "side",
+      $post_type,
+      "advanced",
       "default"
     );
 
