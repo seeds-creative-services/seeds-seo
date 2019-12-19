@@ -11,16 +11,21 @@ Text Domain: seeds_seo
 
 add_action("add_meta_boxes", function() {
 
-  foreach(get_post_types('', 'names') as $post_type) {
+  foreach(get_post_types('', 'objects') as $post_type) {
 
-    add_meta_box(
-      "seeds_seo",
-      esc_html__("SEO Meta Content", "seedscs"),
-      "render_seeds_seo",
-      $post_type,
-      "advanced",
-      "default"
-    );
+    // Only show the SEO block on public post types.
+    if($post_type->public == 1 || $post_type->public == "1") {
+
+      add_meta_box(
+        "seeds_seo",
+        esc_html__("SEO Meta Content", "seedscs"),
+        "render_seeds_seo",
+        $post_type->name,
+        "advanced",
+        "default"
+      );
+
+    }
 
   }
   
