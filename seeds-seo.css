@@ -1,0 +1,66 @@
+#google-preview > * {
+    display: block;
+}
+
+#google-preview > a {
+
+}
+
+#google-preview > h3 {
+    color: rgb(26, 13, 171) !important;
+    font-weight: normal !important;
+    padding: 2px 0 0 0 !important;
+    margin: 0 0 3px 0 !important;
+    line-height: 1.3 !important;
+    font-size: 20px !important;
+}
+
+#google-preview > p {
+    word-break: break-word !important;
+    line-height: 1.57 !important;
+    font-size: 14px !important;
+    color: #3C4043 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+#facebook-preview {
+    border: 1px solid #DDDFE2;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+#facebook-preview #facebook-content {
+    border-bottom: 1px solid #DDDFE2;
+    position: relative;
+    padding: 10px 12px;
+}
+
+#facebook-preview #facebook-content #facebook-text {
+    overflow: hidden;
+    max-height: 46px;
+}
+
+#facebook-preview #facebook-content #facebook-text h3 {
+    font-family: inherit;
+    font-size: 16px;
+    line-height: 20px;
+    margin: 3px 0 0;
+    padding-top: 2px;
+    font-weight: 600;
+    overflow: hidden;
+}
+
+#facebook-preview #facebook-content #facebook-text p {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    color: #606770;
+    font-size: 14px;
+    line-height: 20px;
+    word-break: break-word;
+    max-height: 80px;
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+}

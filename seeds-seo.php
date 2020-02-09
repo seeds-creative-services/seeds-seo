@@ -9,123 +9,180 @@ Author URI: https://seedscreativeservices.com
 Text Domain: seeds_seo
 */
 
-add_action("add_meta_boxes", function() {
+class SeedsSEO {
 
-  foreach(get_post_types('', 'objects') as $post_type) {
+    public function __construct() {
 
-    // Only show the SEO block on public post types.
-    if($post_type->public == 1 || $post_type->public == "1") {
+        /**
+         * Exit if this file is accessed directly.
+         */
 
-      add_meta_box(
-        "seeds_seo",
-        esc_html__("SEO Meta Content", "seedscs"),
-        "render_seeds_seo",
-        $post_type->name,
-        "advanced",
-        "default"
-      );
+        defined('ABSPATH') || exit;
+
+
+        /**
+         * Override default Gutenberg styles.
+         * Load global block Javascript files.
+         * @since 1.0.0
+         */
+
+        add_action('admin_enqueue_scripts', function() {
+
+            $scriptURL = plugins_url() . "/seeds-seo/seeds-seo.js";
+            wp_register_script('seeds-seo-script', $scriptURL, array('jquery'), '1.0.0', 'all');
+            wp_enqueue_script('seeds-seo-script');
+
+            $styleURL = plugins_url() . "/seeds-seo/seeds-seo.css";
+            wp_register_style('seeds-seo-style', $styleURL, [], '1.0.0', 'all');
+            wp_enqueue_style('seeds-seo-style');
+
+        });
+
+        $this->AddMetaBoxes();
 
     }
 
-  }
-  
-});
+    public function AddMetaBoxes() {
 
-function render_seeds_seo() {
+        add_action("add_meta_boxes", function() {
 
-  global $post;
+            foreach(get_post_types('', 'objects') as $post_type) {
 
-  $post_url = ($post->post_type === "post" || $post->post_type === "page") ? $post->post_name : $post->post_type."/".$post->post_name;
-  $post_slug = get_site_url()."/".$post_url."/";
+                // Only show the SEO block on public post types.
+                if($post_type->public == 1 || $post_type->public == "1") {
 
-  $meta = get_post_meta($post->ID, "seeds_seo", TRUE); ?>
+                    add_meta_box(
+                        "seeds_seo",
+                        esc_html__("SEO Meta Content", "seedscs"),
+                        "render_seeds_seo",
+                        $post_type->name,
+                        "advanced",
+                        "default"
+                    );
 
-  <div>
+                }
 
-    <input type="hidden" name="seeds_seo_nonce" value="<?php echo wp_create_nonce(basename(__FILE__)); ?>">
+            }
 
-    <fieldset class="wporg_field">
-      <strong>Search Engine Settings</strong>
-      <div class="widefat">
-        <label for="seeds_seo_index">
-          <input type="radio" id="seeds_seo_index" name="seeds_seo[indexing]" value="index" <?php if((isset($meta['indexing']) && $meta['indexing'] === "index") or !isset($meta['indexing'])) echo "checked"; ?>>
-          Allow Indexing
-        </label>
-      </div>
-      <div class="widefat">
-        <label for="seeds_seo_noindex">
-          <input type="radio" id="seeds_seo_noindex" name="seeds_seo[indexing]" value="noindex" <?php if(isset($meta['indexing']) && $meta['indexing'] === "noindex") echo "checked"; ?>>
-          Disallow Indexing
-        </label>
-      </div>
-      <div class="widefat">
-        <label for="seeds_seo_follow">
-          <input type="radio" id="seeds_seo_follow" name="seeds_seo[crawling]" value="follow" <?php if((isset($meta['crawling']) && $meta['crawling'] === "follow") or !isset($meta['crawling'])) echo "checked"; ?>>
-          Allow Crawling
-        </label>
-      </div>
-      <div class="widefat">
-        <label for="seeds_seo_nofollow">
-          <input type="radio" id="seeds_seo_nofollow" name="seeds_seo[crawling]" value="nofollow" <?php if(isset($meta['crawling']) && $meta['crawling'] === "nofollow") echo "checked"; ?>>
-          Disallow Cralwing
-        </label>
-      </div>
-    </fieldset>
+        });
 
-    <br>
+        function render_seeds_seo() {
 
-    <fieldset class="wporg_field">
-      <label for="seeds_seo_title"><strong>Meta Title</strong></label>
-      <input type="text" class="widefat" id="seeds_seo_title" name="seeds_seo[title]" value="<?php echo isset($meta['title']) ? $meta['title'] : ""; ?>">
-    </fieldset>
+            global $post;
 
-    <br>
+            $post_url = ($post->post_type === "post" || $post->post_type === "page") ? $post->post_name : $post->post_type."/".$post->post_name;
+            $post_slug = get_site_url()."/".$post_url."/";
 
-    <fieldset class="wporg_field">
-      <label for="seeds_seo_description"><strong>Meta Description</strong></label>
-      <textarea type="text" class="widefat" id="seeds_seo_description" name="seeds_seo[description]"><?php echo isset($meta['description']) ? $meta['description'] : ""; ?></textarea>
-    </fieldset>
+            $meta = get_post_meta($post->ID, "seeds_seo", TRUE); ?>
 
-    <br>
+            <div class="row">
 
-  </div>
+                <div class="col-6">
 
-<?php }
+                    <input type="hidden" name="seeds_seo_nonce" value="<?php echo wp_create_nonce(basename(__FILE__)); ?>">
 
+                    <fieldset class="inline-field">
+                        <strong>Allow Indexing</strong>
+                        <label for="seeds_seo_index">
+                        <span class="input-toggle">
+                            <input type="checkbox" id="seeds_seo_index" name="seeds_seo[indexing]" value="index" <?php if((isset($meta['indexing']) && $meta['indexing'] === "index")) echo "checked"; ?>>
+                        </span>
+                        </label>
+                    </fieldset>
 
-add_action("save_post", "save_seeds_seo");
+                    <fieldset class="inline-field">
+                        <strong>Allow Crawling</strong>
+                        <label for="seeds_seo_follow">
+                        <span class="input-toggle">
+                            <input type="checkbox" id="seeds_seo_follow" name="seeds_seo[crawling]" value="follow" <?php if((isset($meta['crawling']) && $meta['crawling'] === "follow")) echo "checked"; ?>>
+                        </span>
+                        </label>
+                    </fieldset>
 
-function save_seeds_seo($post_id) {
+                    <fieldset>
+                        <label for="seeds_seo_title"><strong>Meta Title</strong></label>
+                        <input type="text" class="widefat" id="seeds_seo_title" name="seeds_seo[title]" value="<?php echo isset($meta['title']) ? $meta['title'] : ""; ?>" oninput="Seeds.SEO.UpdateTitle();">
+                    </fieldset>
 
-  if(isset($_POST['seeds_seo_nonce'])) {
+                    <fieldset>
+                        <label for="seeds_seo_description"><strong>Meta Description</strong></label>
+                        <textarea type="text" class="widefat" id="seeds_seo_description" name="seeds_seo[description]" oninput="Seeds.SEO.UpdateDescription();">
+                            <?php echo isset($meta['description']) ? $meta['description'] : ""; ?>
+                        </textarea>
+                    </fieldset>
 
+                </div>
 
-    if(!wp_verify_nonce($_POST['seeds_seo_nonce'], basename(__FILE__)))
-      return $post_id;
+                <div class="col-6">
 
+                    <fieldset>
+                        <strong>Google Preview</strong>
+                        <div id="google-preview">
+                            <a href="#">https://seedscreativeservices.com</a>
+                            <h3></h3>
+                            <p></p>
+                        </div>
+                    </fieldset>
 
-    if(defined("DOING_AUTOSAVE") && DOING_AUTOSAVE)
-      return $post_id;
+                    <fieldset>
+                        <strong>Facebook Preview</strong>
+                        <div id="facebook-preview">
+                            <div id="facebook-content">
+                                <div id=facebook-text">
+                                    <h3></h3>
+                                    <p></p>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
 
+                </div>
 
-    if("page" === $POST['post_type'])
-      if(!current_user_can("edit_page", $post_id))
-        return $post_id;
+            </div>
 
-
-    /* Delare the previous and current meta data values */
-    $previous_meta = get_post_meta($post_id, "seeds_seo", TRUE);
-    $current_meta  = $_POST['seeds_seo'];
-
-
-    if($current_meta && $current_meta !== $previous_meta)
-      update_post_meta($post_id, "seeds_seo", $current_meta);
-
-
-    if("" === $current_meta && $previous_meta)
-      delete_post_meta($post_id, "seeds_seo", $previous_meta);
+        <?php }
 
 
-  }
+        add_action("save_post", "save_seeds_seo");
+
+        function save_seeds_seo($post_id) {
+
+            if(isset($_POST['seeds_seo_nonce'])) {
+
+
+                if(!wp_verify_nonce($_POST['seeds_seo_nonce'], basename(__FILE__)))
+                    return $post_id;
+
+
+                if(defined("DOING_AUTOSAVE") && DOING_AUTOSAVE)
+                    return $post_id;
+
+
+                if("page" === $_POST['post_type'])
+                    if(!current_user_can("edit_page", $post_id))
+                        return $post_id;
+
+
+                /* Declare the previous and current meta data values */
+                $previous_meta = get_post_meta($post_id, "seeds_seo", TRUE);
+                $current_meta  = $_POST['seeds_seo'];
+
+
+                if($current_meta && $current_meta !== $previous_meta)
+                    update_post_meta($post_id, "seeds_seo", $current_meta);
+
+
+                if("" === $current_meta && $previous_meta)
+                    delete_post_meta($post_id, "seeds_seo", $previous_meta);
+
+
+            }
+
+        }
+
+    }
 
 }
+
+global $SeedsSEO;
+$SeedsSEO = new SeedsSEO;
