@@ -85,7 +85,7 @@ class SeedsSEO {
                         <strong>Allow Indexing</strong>
                         <label for="seeds_seo_index">
                         <span class="input-toggle">
-                            <input type="checkbox" id="seeds_seo_index" name="seeds_seo[indexing]" value="index" <?php if((isset($meta['indexing']) && $meta['indexing'] === "index")) echo "checked"; ?>>
+                            <input type="checkbox" id="seeds_seo_index" name="seeds_seo[indexing]" value="index" <?php if((!isset($meta['indexing']) || $meta['indexing'] === "index")) echo "checked"; ?>>
                         </span>
                         </label>
                     </fieldset>
@@ -94,7 +94,7 @@ class SeedsSEO {
                         <strong>Allow Crawling</strong>
                         <label for="seeds_seo_follow">
                         <span class="input-toggle">
-                            <input type="checkbox" id="seeds_seo_follow" name="seeds_seo[crawling]" value="follow" <?php if((isset($meta['crawling']) && $meta['crawling'] === "follow")) echo "checked"; ?>>
+                            <input type="checkbox" id="seeds_seo_follow" name="seeds_seo[crawling]" value="follow" <?php if((!isset($meta['crawling']) || $meta['crawling'] === "follow")) echo "checked"; ?>>
                         </span>
                         </label>
                     </fieldset>
