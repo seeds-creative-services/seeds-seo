@@ -1,7 +1,7 @@
 <?php
 
 /**
-Plugin Name: Seeds SEO
+Plugin Name: SEEDS: Page Meta Content
 Description: Manage SEO meta content for pages.
 Version: 1.0.0
 Author: Seeds Creative Services, LLC.
