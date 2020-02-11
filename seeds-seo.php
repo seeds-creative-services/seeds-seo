@@ -149,32 +149,24 @@ class SeedsSEO {
 
             if(isset($_POST['seeds_seo_nonce'])) {
 
-
                 if(!wp_verify_nonce($_POST['seeds_seo_nonce'], basename(__FILE__)))
                     return $post_id;
-
 
                 if(defined("DOING_AUTOSAVE") && DOING_AUTOSAVE)
                     return $post_id;
 
-
-                if("page" === $_POST['post_type'])
-                    if(!current_user_can("edit_page", $post_id))
-                        return $post_id;
-
+                if(!current_user_can("edit_page", $post_id))
+                    return $post_id;
 
                 /* Declare the previous and current meta data values */
                 $previous_meta = get_post_meta($post_id, "seeds_seo", TRUE);
                 $current_meta  = $_POST['seeds_seo'];
 
-
                 if($current_meta && $current_meta !== $previous_meta)
                     update_post_meta($post_id, "seeds_seo", $current_meta);
 
-
                 if("" === $current_meta && $previous_meta)
                     delete_post_meta($post_id, "seeds_seo", $previous_meta);
-
 
             }
 
