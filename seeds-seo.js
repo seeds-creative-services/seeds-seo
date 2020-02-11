@@ -2,9 +2,6 @@
 
     'use strict';
 
-    Seeds.SEO.UpdateTitle();
-    Seeds.SEO.UpdateDescription();
-
     /**
      * @namespace Seeds
      * @method Seeds.SEO
@@ -29,6 +26,9 @@
         }
 
     };
+
+    Seeds.SEO.UpdateTitle();
+    Seeds.SEO.UpdateDescription();
 
 
 }(window.Seeds = window.Seeds || {}, jQuery));
